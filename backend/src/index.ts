@@ -3,9 +3,11 @@ import express from "express";
 import dotenv from "dotenv"
 dotenv.config()
 const app = express()
-import { userRouter } from "./routes/userRouter"
+import  userRouter  from "./routes/userRouter"
+import cookieParser from "cookie-parser";
 app.use(express.json())
 
+app.use(cookieParser())
 app.use('/user', userRouter)
 
 async function connect(){
@@ -15,4 +17,6 @@ async function connect(){
     await mongoose.connect(process.env.MONGO_URI);
 }
 connect()
+
+app.listen(3000)
 
