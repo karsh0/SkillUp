@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { Request, Response } from "express";
 import { z } from "zod"
 import { userModel } from "../database/db";
 import  bcrypt  from "bcrypt"
@@ -18,14 +19,16 @@ userRouter.post('/signup', async (req,res) =>{
     })
     try{
         const {username, email, password, name} = requiredData.parse(req.body);
-        const hashedPassword = bcrypt.hash(password, 2)
+        const hashedPassword = await bcrypt.hash(password, 2)
         await userModel.create({
             username,
             email,
             password: hashedPassword, 
             name
         })
-
+        res.json({
+            message: "user signed up!"
+        })
     }catch(err){
         console.log(err)
         alert("Error while signing up")
@@ -45,15 +48,15 @@ userRouter.post('/signin', async (req: Request,res: Response) =>{
             if(!user){
                 res.status(404).json({error: "user not found"})
             }
-            const passwordMatch = await bcrypt.compare(password, user.password);
+            const passwordMatch = await bcrypt.compare(password, user!.password);
 
             if(!passwordMatch){
                 res.status(401).json({ error: "Invlaid password"})
             }
             if(user && passwordMatch){
-                const token = jwt.sign({userId: user._id},process.env.JWT_SECRET!)
-                res.setHeader('Authorization', token);
-                return res.json({
+                const token = jwt.sign({userId: user._id.toString()},process.env.JWT_SECRET!)
+                res.setHeader('Authorization', token)
+                res.json({
                     token,
                     message: "User signed up!"
                 })
@@ -70,8 +73,12 @@ userRouter.post('/signin', async (req: Request,res: Response) =>{
 })
 
 userRouter.get('/dashboard', userMiddleware, async(req,res)=>{
-    const user = userModel.findOne({
-        userId: req.userId
+    const user = await userModel.findOne({
+        _id: req.userId
+    })
+    res.json({
+        userId: req.userId,
+        user
     })
 })
 
