@@ -33,12 +33,12 @@ userRouter.post('/signup', async (req,res) =>{
 
 })
 
-userRouter.post('/signin', async (req,res) =>{
-    const requiredData = z.object({
-        email: z.string().email(),
-        password: z.string(),
-    })
+userRouter.post('/signin', async (req: Request,res: Response) =>{
     try{
+        const requiredData = z.object({
+            email: z.string().email(),
+            password: z.string(),
+        })
         const { email, password } = requiredData.parse(req.body);
             const user = await userModel.findOne({ email })
 
