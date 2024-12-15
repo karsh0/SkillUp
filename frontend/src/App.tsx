@@ -1,12 +1,16 @@
 
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
+import { Homepage } from './components/Homepage'
 
 function App() {
 
   return (
-    <div className='h-screen w-screen flex text-center justify-center items-center text-4xl font-bold text-white bg-slate-700'>
-      SkillUp
-    </div>
+    <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<Homepage/>} />
+    </Routes>
+    </BrowserRouter>
   )
 }
 
