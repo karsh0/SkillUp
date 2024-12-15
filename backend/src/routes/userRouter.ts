@@ -16,15 +16,17 @@ userRouter.post('/signup', async (req,res) =>{
         email: z.string().email(),
         password: z.string(),
         name: z.string(),
+        role: z.string().optional()
     })
     try{
-        const {username, email, password, name} = requiredData.parse(req.body);
+        const {username, email, password, name, role} = requiredData.parse(req.body);
         const hashedPassword = await bcrypt.hash(password, 2)
         await userModel.create({
             username,
             email,
             password: hashedPassword, 
-            name
+            name,
+            role: role || 'Student'
         })
         res.json({
             message: "user signed up!"
@@ -35,7 +37,6 @@ userRouter.post('/signup', async (req,res) =>{
     }
 
 })
-
 userRouter.post('/signin', async (req: Request,res: Response) =>{
     try{
         const requiredData = z.object({
@@ -47,15 +48,16 @@ userRouter.post('/signin', async (req: Request,res: Response) =>{
 
             if(!user){
                 res.status(404).json({error: "user not found"})
+                return
             }
-            const passwordMatch = await bcrypt.compare(password, user!.password);
+            const passwordMatch = await bcrypt.compare(password, user.password);
 
             if(!passwordMatch){
                 res.status(401).json({ error: "Invlaid password"})
             }
             if(user && passwordMatch){
-                const token = jwt.sign({userId: user._id.toString()},process.env.JWT_SECRET!)
-                res.setHeader('Authorization', token)
+                const token = jwt.sign({userId: user._id.toString(), role: user.role},process.env.JWT_SECRET as string)
+                res.setHeader('authorization', token)
                 res.json({
                     token,
                     message: "User signed up!"
@@ -77,7 +79,6 @@ userRouter.get('/dashboard', userMiddleware, async(req,res)=>{
         _id: req.userId
     })
     res.json({
-        userId: req.userId,
         user
     })
 })

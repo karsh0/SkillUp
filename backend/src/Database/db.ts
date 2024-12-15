@@ -1,23 +1,28 @@
-import mongoose, { model, Schema, Types } from "mongoose";
+import { model, Schema, Types } from "mongoose";
+
+enum userRole{
+    ADMIN = "Admin",
+    STUDENT = "Student"
+}
 
 const userSchema = new Schema({
     name: String,
     username: String,
     email: String,
-    role: String,
+    role: {type: String, enum: Object.values(userRole) ,default: userRole.STUDENT},
     password: { type:String, required:true },
     created_at: {type: Date, default: Date.now}
-    
 })
 const courseSchema = new Schema({
     title: { type: String, required: true }, 
     description: String,
     price: Number,
     thumbnail_url: String,
-    instructor_id: String,
+    instructor_id: {type: Types.ObjectId},
     purchased: Boolean,
-    created_at: {type: Date, default: Date.now}
-}, { _id: false });
+    created_at: {type: Date, default: Date.now},
+    updated_at: {type: Date, default: Date.now},
+});
 
 
 const purchaseSchema  = new Schema({
