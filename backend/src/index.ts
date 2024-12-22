@@ -6,8 +6,9 @@ const app = express()
 import  userRouter  from "./routes/userRouter"
 import  adminRouter  from "./routes/adminRouter"
 import cookieParser from "cookie-parser";
+import cors from "cors";
 app.use(express.json())
-
+app.use(cors())
 app.use(cookieParser())
 app.use('/user', userRouter)
 app.use('/admin', adminRouter)

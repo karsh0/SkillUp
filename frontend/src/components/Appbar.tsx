@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/Button";
 import skillupLogo from "../assets/skillup.png";
+import axios from "axios";
 
 export const Appbar = () => {
+
     return (
         <div className="flex items-center justify-center">
         <div className="text-black px-10 py-2 flex items-center justify-between gap-5 w-2/3 max-w-screen">

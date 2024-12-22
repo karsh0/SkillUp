@@ -15,17 +15,15 @@ userRouter.post('/signup', async (req,res) =>{
         username: z.string(),
         email: z.string().email(),
         password: z.string(),
-        name: z.string(),
         role: z.string().optional()
     })
     try{
-        const {username, email, password, name, role} = requiredData.parse(req.body);
+        const {username, email, password, role} = requiredData.parse(req.body);
         const hashedPassword = await bcrypt.hash(password, 2)
         await userModel.create({
             username,
             email,
             password: hashedPassword, 
-            name,
             role: role || 'Student'
         })
         res.json({
