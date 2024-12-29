@@ -24,7 +24,7 @@ userRouter.post('/signup', async (req,res) =>{
             username,
             email,
             password: hashedPassword, 
-            role: role || 'Student'
+            role: role || 'student'
         })
         res.json({
             message: "user signed up!"

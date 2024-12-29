@@ -1,8 +1,8 @@
 import { model, Schema, Types } from "mongoose";
 
 enum userRole{
-    ADMIN = "Admin",
-    STUDENT = "Student"
+    ADMIN = "admin",
+    STUDENT = "student"
 }
 
 const userSchema = new Schema({

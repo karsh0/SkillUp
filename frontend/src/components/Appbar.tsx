@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/Button";
-import skillupLogo from "../assets/skillup.png";
+import skillupLogo from "../assets/skillup-logo.png";
 import axios from "axios";
 
 export const Appbar = () => {
@@ -9,10 +9,10 @@ export const Appbar = () => {
         <div className="flex items-center justify-center">
         <div className="text-black px-10 py-2 flex items-center justify-between gap-5 w-2/3 max-w-screen">
             <div className="flex gap-10 items-center text-md">
-                <img
+                  <img
                     src={skillupLogo}
                     alt="SkillUp Logo"
-                    className="h-14 w-auto"
+                    className="h-16 w-auto"
                 />
             <div className="flex gap-10 items-center text-md">
                 <Link to="/courses">
@@ -32,7 +32,7 @@ export const Appbar = () => {
                 </Link>
             </div>
             </div>
-                <Button title="Signup" background={true} />
+                <Link to={'/signup'}><Button title="Signup" background={true} /></Link>
         </div>
         </div>
     );
