@@ -16,7 +16,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use(cookieParser());
+// app.use(cookieParser());
 app.use('/user', userRouter);
 
 // User Signup
@@ -48,6 +48,7 @@ app.post('/signup', async (req, res) => {
 
 // User Signin
 app.post('/signin', async (req, res) => {
+const JWT_SECRET = "thejwt"
     try {
         const requiredData = z.object({
             email: z.string().email(),
@@ -66,17 +67,18 @@ app.post('/signin', async (req, res) => {
             res.status(401).json({ error: "Invalid password" });
             return;
         }
+        const payload = {
+            userId: user._id,
+            role: user.role
+        }
 
-        const token = jwt.sign(
-            { userId: user._id.toString(), role: user.role },
-            process.env.JWT_SECRET as string,
-            { expiresIn: "7d" }
-        );
+        const token = jwt.sign(payload,JWT_SECRET);
 
-        res.cookie("authToken", token)
-
+        // res.cookie("authToken", token)
+        
         res.json({
             message: "User signed in!",
+            token
         });
     } catch (err) {
         console.log(err);

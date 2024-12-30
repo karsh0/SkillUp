@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "./ui/Button";
 import skillupLogo from "../assets/skillup-logo.png";
-import axios from "axios";
 
 export const Appbar = () => {
 

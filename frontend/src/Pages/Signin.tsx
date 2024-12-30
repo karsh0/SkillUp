@@ -3,7 +3,7 @@ import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
 import axios from "axios";
 import { BACKEND_URL } from "../utils/lib";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function Signin(){
     const navigate = useNavigate()
@@ -14,7 +14,9 @@ export function Signin(){
             email: emailRef.current?.value,
             password: passwordRef.current?.value,
         })
+        localStorage.setItem('token', res.data.token)
         console.log(res.data)
+        console.log(res.data.token)
         navigate('/dashboard')
     }
 

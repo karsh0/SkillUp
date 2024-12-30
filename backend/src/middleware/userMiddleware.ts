@@ -2,28 +2,28 @@
 import {Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 require("dotenv").config()
+const JWT_SECRET = "thejwt"
 
+interface userdecode{
+    userId: string,
+    role: string
+}
 
 export const userMiddleware = (req: Request, res: Response , next:NextFunction) =>{
-    const token = req.cookies.authToken;
-    console.log(token)
-    try{
+     const token = req.headers.token as string;
+
+        console.log(token)
         if(!token){
             res.json({error: "error"})
+            return
         }
-        else{
-            //@ts-ignore
-        const decoded = jwt.verify(token,process.env.JWT_SECRET as string) as {userId: string, role: string};
-        if(!decoded || decoded.role != "Student"){
+        const decoded = jwt.verify(token,JWT_SECRET) as userdecode;
+        if(!decoded || decoded.role != "student"){
           res.json({message:  "Access denied. Students only."})
           return
         }
         console.log("decoded: ", decoded);
         req.userId = decoded.userId
         next();
-        }
-    }
-    catch(err){
-        res.json({err})
-    }
+            
 }

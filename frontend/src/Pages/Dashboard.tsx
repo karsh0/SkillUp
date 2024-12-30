@@ -6,7 +6,9 @@ export function Dashboard(){
     
     useEffect(()=>{
         axios.get('http://localhost:3000/dashboard',{
-            withCredentials: true,
+            headers:{
+                "token":localStorage.getItem('token')
+            }
         }).then((response) => setUser(response.data))
     },[])
     {console.log(user)}
