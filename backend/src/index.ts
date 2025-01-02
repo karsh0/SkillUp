@@ -10,16 +10,16 @@ import userRouter from "./routes/userRouter";
 import { courseModel, userModel } from "./database/db";
 import { userMiddleware } from "./middleware/userMiddleware";
 import { adminMiddleware } from "./middleware/adminMiddleware";
+import adminRouter from "./routes/adminRouter";
 
 dotenv.config();
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-// app.use(cookieParser());
 app.use('/user', userRouter);
+app.use('/admin', adminRouter);
 
-// User Signup
 app.post('/signup', async (req, res) => {
     const requiredData = z.object({
         username: z.string(),
@@ -46,7 +46,6 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-// User Signin
 app.post('/signin', async (req, res) => {
 const JWT_SECRET = "thejwt"
     try {
@@ -73,8 +72,6 @@ const JWT_SECRET = "thejwt"
         }
 
         const token = jwt.sign(payload,JWT_SECRET);
-
-        // res.cookie("authToken", token)
         
         res.json({
             message: "User signed in!",
@@ -86,50 +83,13 @@ const JWT_SECRET = "thejwt"
     }
 });
 
-// Dashboard Route
+
 app.get('/dashboard', userMiddleware, async (req, res) => {
     const user = await userModel.findOne({ _id: req.userId });
     res.json({ user });
 });
 
-// Add Course
-app.post('/addcourse', adminMiddleware, async (req, res) => {
-    const { title, description, price, thumbnail_url } = req.body;
-    await courseModel.create({
-        title,
-        description,
-        price,
-        thumbnail_url,
-        instructor_id: req.userId,
-    });
-    res.json({ message: "Course created successfully!" });
-});
 
-// Update Course
-app.put('/updatecourse', adminMiddleware, async (req, res) => {
-    const { title, description, price, thumbnail_url } = req.body;
-    const courseId = req.params.courseId;
-    await courseModel.updateOne(
-        { _id: courseId },
-        {
-            title,
-            description,
-            price,
-            thumbnail_url,
-            updated_at: Date.now(),
-        }
-    );
-    res.json({ message: "Course updated successfully!" });
-});
-
-// Delete Course
-app.delete('/deletecourse', adminMiddleware, async (req, res) => {
-    const courseId = req.params.courseId;
-    await courseModel.deleteOne({ _id: courseId });
-    res.json({ message: "Course deleted successfully!" });
-});
-
-// MongoDB Connection
 async function connect() {
     if (!process.env.MONGO_URI) {
         throw new Error("Mongo URI not provided");

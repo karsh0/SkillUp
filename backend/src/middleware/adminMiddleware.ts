@@ -3,7 +3,7 @@ import jwt, { decode } from "jsonwebtoken"
 require("dotenv").config()
 
 export const adminMiddleware = (req: Request,res: Response,next: NextFunction) =>{
-      const token = req.headers.authorization;
+      const token = req.headers.token as string;
        console.log(token)
        try{
            if(!token){
@@ -11,7 +11,7 @@ export const adminMiddleware = (req: Request,res: Response,next: NextFunction) =
            }
            else{
            const decoded = jwt.verify(token,process.env.JWT_SECRET as string) as {userId: string, role: string};
-           if(!decoded || decoded.role != "Admin"){
+           if(!decoded || decoded.role != "admin"){
             res.json({message:  "Access denied. Admins only."})
             return
            }

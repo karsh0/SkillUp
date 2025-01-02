@@ -1,14 +1,14 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Button } from "../components/ui/Button"
 import { useNavigate } from "react-router-dom"
+import { Button } from "../ui/Button"
 
-export function Dashboard(){
+export function AdminDashboard(){
     const [user, setUser] = useState()
     const navigate = useNavigate()
     
     useEffect(()=>{
-        axios.get('http://localhost:3000/dashboard',{
+        axios.get('http://localhost:3000/admin/dashboard',{
             headers:{
                 "token":localStorage.getItem('token')
             }
@@ -17,8 +17,8 @@ export function Dashboard(){
     {console.log(user)}
 
     return <div>
-        Dashboard
+        AdminDashboard
         {JSON.stringify(user)}
-        <Button title="Admin Dashboard" onClick={()=>navigate('/admin/dashboard')}/>
+        <Button title="Add Course" onClick={()=>navigate('/admin/dashboard')}/>
     </div>
 }

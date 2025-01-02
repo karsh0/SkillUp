@@ -18,10 +18,6 @@ export const userMiddleware = (req: Request, res: Response , next:NextFunction) 
             return
         }
         const decoded = jwt.verify(token,JWT_SECRET) as userdecode;
-        if(!decoded || decoded.role != "student"){
-          res.json({message:  "Access denied. Students only."})
-          return
-        }
         console.log("decoded: ", decoded);
         req.userId = decoded.userId
         next();

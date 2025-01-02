@@ -1,8 +1,14 @@
 import { Router } from "express";
-import { courseModel } from "../database/db";
+import { courseModel, userModel } from "../database/db";
 import { adminMiddleware } from "../middleware/adminMiddleware";
 
 const adminRouter = Router()
+
+
+adminRouter.get('/dashboard', adminMiddleware, async (req,res)=>{
+    const admin = await userModel.findOne({ _id: req.userId });
+    res.json({ admin });
+})
 
 adminRouter.post('/addcourse', adminMiddleware, async (req,res) =>{
     const {title, description, price,thumbnail_url} = req.body;
